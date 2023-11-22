@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { cryptocurrenciesApi } from './cryptocurrenciesApi'
+import { cryptoCurrenciesApi } from './cryptoCurrenciesApi'
 
 
 const store = configureStore({
   reducer: {
-    [cryptocurrenciesApi.reducerPath]: cryptocurrenciesApi.reducer,
-  }
+    [cryptoCurrenciesApi.reducerPath]: cryptoCurrenciesApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(cryptoCurrenciesApi.middleware),
 })
 
 export default store

@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import './ui/globals.css'
+import { Provider } from 'react-redux'
+import store from './store/store'
+
 
 export const metadata: Metadata = {
   title: 'Crypto Currencies',
@@ -13,7 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Provider store={store}>
+          {children}
+        </Provider>
+      </body>
     </html>
   )
 }

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { CRYPTO_URL, FETCH_ITEMS_LIMIT } from './constants/strings'
+import { CRYPTO_URL } from './constants/strings'
+import { FETCH_ITEMS_LIMIT } from './constants/numbers'
 import { CryptoCurrency } from './types/Cryptocurrency'
 
 interface CryptoApiResponse {

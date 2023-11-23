@@ -21,6 +21,15 @@ export const cryptoCurrenciesApi = createApi({
   })
 })
 
+export const getCryptoCurrencies = async (start: number) => {
+  const response = await fetch(`${CRYPTO_URL}tickers/?start=${start}&limit=${FETCH_ITEMS_LIMIT}`);
+  const data = await response.json()
+  if (!response.ok) {
+    throw Error('Error fetching crypto currencies', data.message)
+  }
+  return data;
+}
+
 export const { useGetCryptocurrenciesByPageQuery } = cryptoCurrenciesApi
 export const { getCryptocurrenciesByPage } = cryptoCurrenciesApi.endpoints;
 

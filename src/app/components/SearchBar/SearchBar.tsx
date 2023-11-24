@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { getCryptoCurrencies } from "@/app/lib/cryptoCurrenciesApi";
 import { CryptoCurrency } from "@/app/lib/types/CryptoCurrency";
+import { appendParamsSearchParams } from "@/app/lib/utils/location";
 
 interface SearchBarProps {
   cryptoCurrencies: CryptoCurrency[]
@@ -42,6 +43,10 @@ export default function SearchBar({ cryptoCurrencies, currentPage, totalPages }:
     setFetchingMoreItems(false)
   }
 
+  const handleClickItem = (cryptoCurrencyId: string) => {
+    location.search = appendParamsSearchParams(location.search, { filter: cryptoCurrencyId })
+  }
+
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value.length >= MIN_WORD_LENGTH && !fetchingMoreItems && cryptoCurrencies.length > 0) {
@@ -64,7 +69,9 @@ export default function SearchBar({ cryptoCurrencies, currentPage, totalPages }:
           <ul>
             {filteredItems.map(item => (
               <li key={item.id}>
-                {`${item.symbol} - ${item.name}`}
+                <a role="button" onClick={() => handleClickItem(item.id)}>
+                  {`${item.symbol} - ${item.name}`}
+                </a>
               </li>
             ))}
           </ul>

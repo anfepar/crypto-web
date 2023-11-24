@@ -1,31 +1,51 @@
 'use client'
 export const dynamic = 'force-dynamic'
-import { useDispatch, useSelector } from "react-redux"
-import { useGetCryptocurrenciesByPageQuery } from "./lib/cryptoCurrenciesApi"
+import { useSearchParams } from 'next/navigation'
+import { getCryptoCurrenciesById, useGetCryptocurrenciesByPageQuery } from "./lib/cryptoCurrenciesApi"
 import { CryptoCurrency } from "./lib/types/CryptoCurrency"
-import { RootState } from "./lib/store"
-import { setCurrentPage } from "./lib/currentPage"
 import { getTotalPages } from "./lib/utils/pagination"
 import CryptoCurrenciesTable from "./components/CryptoCurrenciesTable/CryptoCurrenciesTable"
 import Pagination from "./components/Pagination/Pagination"
 import SearchBar from "./components/SearchBar/SearchBar"
+import { appendParamsSearchParams } from './lib/utils/location'
+import { useEffect, useMemo, useState } from 'react'
 
 export default function Home() {
-  const currentPage = useSelector((state: RootState) => state.currentPage)
+  const searchParams = useSearchParams()
+  const pageParam = searchParams.get('page')
+  const filterParam = searchParams.get('filter')
+  const currentPage = pageParam ? parseInt(pageParam) : 1
   const { data, error, isLoading } = useGetCryptocurrenciesByPageQuery(currentPage)
-  const cryptocurrencies: CryptoCurrency[] = data?.data || [];
+  const [cryptoCurrencies, setCryptoCurrencies] = useState<CryptoCurrency[]>([])
 
-  const dispatch = useDispatch()
+  useEffect(() => {
+    const fetchedCryptoCurrencies = data?.data || []
+
+    const getFilteredCryptoCurrency = async (id: string) => {
+      const cryptoCurrency = await getCryptoCurrenciesById(id)
+      setCryptoCurrencies(cryptoCurrency)
+    }
+
+    if (filterParam) {
+      const filteredItems = fetchedCryptoCurrencies.filter((cryptoCurrency) => cryptoCurrency.id === filterParam)
+      if (filteredItems.length === 0) {
+        getFilteredCryptoCurrency(filterParam)
+      }
+    } else {
+      setCryptoCurrencies(fetchedCryptoCurrencies)
+    }
+  }, [data, filterParam])
+
 
   const handleChangePage = (newPage: number) => {
-    dispatch(setCurrentPage(newPage))
+    location.search = appendParamsSearchParams(location.search, { page: newPage.toString() })
   }
 
   return (
     <main>
       <section>
-        <SearchBar cryptoCurrencies={cryptocurrencies} currentPage={currentPage} totalPages={getTotalPages(data?.info.coins_num as number)} />
-        <CryptoCurrenciesTable cryptoCurrencies={cryptocurrencies} />
+        <SearchBar cryptoCurrencies={cryptoCurrencies} currentPage={currentPage} totalPages={getTotalPages(data?.info.coins_num as number)} />
+        <CryptoCurrenciesTable cryptoCurrencies={cryptoCurrencies} />
         <Pagination totalCoins={data?.info.coins_num as number} currentPage={currentPage} onPageClick={handleChangePage} />
       </section>
     </main>

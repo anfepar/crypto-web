@@ -17,6 +17,9 @@ export const cryptoCurrenciesApi = createApi({
   endpoints: (builder) => ({
     getCryptocurrenciesByPage: builder.query<CryptoApiResponse, number>({
       query: (page) => `tickers/?start=${(page - 1) * FETCH_ITEMS_LIMIT}&limit=${FETCH_ITEMS_LIMIT}`
+    }),
+    getCryptoCurrencyById: builder.query<CryptoCurrency, string>({
+      query: (id) => `ticker/?id=${id}`
     })
   })
 })
@@ -26,6 +29,15 @@ export const getCryptoCurrencies = async (start: number) => {
   const data = await response.json()
   if (!response.ok) {
     throw Error('Error fetching crypto currencies', data.message)
+  }
+  return data;
+}
+
+export const getCryptoCurrenciesById = async (id: string) => {
+  const response = await fetch(`${CRYPTO_URL}ticker/?id=${id}`);
+  const data = await response.json()
+  if (!response.ok) {
+    throw Error('Error fetching crypto currency', data.message)
   }
   return data;
 }

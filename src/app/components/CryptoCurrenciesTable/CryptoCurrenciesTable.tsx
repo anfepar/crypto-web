@@ -1,4 +1,4 @@
-import { CryptoCurrency } from "../../lib/types/Cryptocurrency";
+import { CryptoCurrency } from "../../lib/types/CryptoCurrency";
 import { tableHeaderConfig } from "./tableHeaderConfig";
 
 interface CryptoCurrenciesTableProps {
@@ -16,6 +16,11 @@ export default function CryptoCurrenciesTable({ cryptoCurrencies }: CryptoCurren
         </tr>
       </thead>
       <tbody>
+        {cryptoCurrencies.length === 0 && (
+          <p>
+            No data to show
+          </p>
+        )}
         {cryptoCurrencies.map((cryptocurrency: CryptoCurrency) => (
           <tr key={cryptocurrency.id}>
             {tableHeaderConfig.map((header) => (

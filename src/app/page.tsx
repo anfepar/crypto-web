@@ -8,7 +8,7 @@ import CryptoCurrenciesTable from "./components/CryptoCurrenciesTable/CryptoCurr
 import Pagination from "./components/Pagination/Pagination"
 import SearchBar from "./components/SearchBar/SearchBar"
 import { appendParamsSearchParams } from './lib/utils/location'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Home() {
   const searchParams = useSearchParams()

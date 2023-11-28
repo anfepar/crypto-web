@@ -1,5 +1,8 @@
 import { getTotalPages } from "@/app/lib/utils/pagination";
+import { faAngleLeft, faAngleRight, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMemo } from "react";
+
 interface PaginationProps {
   currentPage: number,
   totalCoins: number,
@@ -11,16 +14,20 @@ export default function Pagination({ currentPage, totalCoins, onPageClick }: Pag
 
   if (totalCoins === 0) return null
   return (
-    <div className="flex">
-      <ul className="flex">
-        <li><button data-testid="button-first-page" onClick={() => onPageClick(1)}>first</button></li>
+    <div className="flex justify-center my-6">
+      <ul className="grid grid-flow-row grid-cols-7 w-60" >
+        <li className="flex justify-center">
+          <button data-testid="button-first-page" onClick={() => onPageClick(1)}>
+            <FontAwesomeIcon icon={faAnglesLeft} />
+          </button>
+        </li>
         <li>
           <button
             disabled={currentPage === 1}
             onClick={() => currentPage > 1 ? onPageClick(currentPage - 1) : null}
             data-testid="button-prev-page"
           >
-            prev
+            <FontAwesomeIcon icon={faAngleLeft} />
           </button>
         </li>
         {currentPage !== 1 &&
@@ -29,7 +36,9 @@ export default function Pagination({ currentPage, totalCoins, onPageClick }: Pag
               {currentPage - 1}
             </button>
           </li>}
-        <li><span>{currentPage}</span></li>
+        <li>
+          <span className="cursor-pointer">{currentPage}</span>
+          </li>
         {currentPage !== totalPages &&
           <li>
             <button onClick={() => currentPage < totalPages ? onPageClick(currentPage + 1) : null}>
@@ -42,10 +51,14 @@ export default function Pagination({ currentPage, totalCoins, onPageClick }: Pag
             onClick={() => currentPage < totalPages ? onPageClick(currentPage + 1) : null}
             data-testid="button-next-page"
           >
-            next
+            <FontAwesomeIcon icon={faAngleRight} />
           </button>
         </li>
-        <li><button data-testid="button-last-page" onClick={() => onPageClick(totalPages)}>last</button></li>
+        <li>
+          <button data-testid="button-last-page" onClick={() => onPageClick(totalPages)}>
+            <FontAwesomeIcon icon={faAnglesRight} />
+          </button>
+        </li>
       </ul>
     </div>
   )

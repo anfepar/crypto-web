@@ -1,6 +1,7 @@
 'use client'
 export const dynamic = 'force-dynamic'
-import { useSearchParams } from 'next/navigation'
+import {  useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { getCryptoCurrenciesById, useGetCryptocurrenciesByPageQuery } from "./lib/cryptoCurrenciesApi"
 import { CryptoCurrency } from "./lib/types/CryptoCurrency"
 import { getTotalPages } from "./lib/utils/pagination"
@@ -13,6 +14,7 @@ import { useEffect, useState } from 'react'
 export default function Home() {
   const searchParams = useSearchParams()
   const pageParam = searchParams.get('page')
+  const router = useRouter()
   const filterParam = searchParams.get('filter')
   const currentPage = pageParam ? parseInt(pageParam) : 1
   const { data, error, isLoading } = useGetCryptocurrenciesByPageQuery(currentPage)
@@ -38,12 +40,13 @@ export default function Home() {
 
 
   const handleChangePage = (newPage: number) => {
-    location.search = appendParamsSearchParams(location.search, { page: newPage.toString() })
+    const redirectUrl = appendParamsSearchParams(location.search, { page: newPage.toString() })
+    router.push(`/?${redirectUrl}`)
   }
 
   return (
     <main>
-      <section>
+      <section className="container mx-auto max-w-screen-lg">
         <SearchBar cryptoCurrencies={cryptoCurrencies} currentPage={currentPage} totalPages={getTotalPages(data?.info.coins_num as number)} />
         <CryptoCurrenciesTable cryptoCurrencies={cryptoCurrencies} />
         <Pagination totalCoins={data?.info.coins_num as number} currentPage={currentPage} onPageClick={handleChangePage} />

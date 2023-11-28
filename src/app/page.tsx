@@ -1,6 +1,6 @@
 'use client'
 export const dynamic = 'force-dynamic'
-import {  useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import { getCryptoCurrenciesById, useGetCryptocurrenciesByPageQuery } from "./lib/cryptoCurrenciesApi"
 import { CryptoCurrency } from "./lib/types/CryptoCurrency"
@@ -14,8 +14,8 @@ import { useEffect, useState } from 'react'
 export default function Home() {
   const searchParams = useSearchParams()
   const pageParam = searchParams.get('page')
-  const router = useRouter()
   const filterParam = searchParams.get('filter')
+  const router = useRouter()
   const currentPage = pageParam ? parseInt(pageParam) : 1
   const { data, error, isLoading } = useGetCryptocurrenciesByPageQuery(currentPage)
   const [cryptoCurrencies, setCryptoCurrencies] = useState<CryptoCurrency[]>([])
@@ -32,6 +32,8 @@ export default function Home() {
       const filteredItems = fetchedCryptoCurrencies.filter((cryptoCurrency) => cryptoCurrency.id === filterParam)
       if (filteredItems.length === 0) {
         getFilteredCryptoCurrency(filterParam)
+      } else {
+        setCryptoCurrencies(filteredItems)
       }
     } else {
       setCryptoCurrencies(fetchedCryptoCurrencies)
@@ -47,7 +49,12 @@ export default function Home() {
   return (
     <main>
       <section className="container mx-auto max-w-screen-lg">
-        <SearchBar cryptoCurrencies={cryptoCurrencies} currentPage={currentPage} totalPages={getTotalPages(data?.info.coins_num as number)} />
+        <SearchBar
+          cryptoCurrencies={cryptoCurrencies}
+          currentPage={currentPage}
+          totalPages={getTotalPages(data?.info.coins_num as number)}
+          filterIsActive={filterParam !== null}
+        />
         <CryptoCurrenciesTable cryptoCurrencies={cryptoCurrencies} />
         <Pagination totalCoins={data?.info.coins_num as number} currentPage={currentPage} onPageClick={handleChangePage} />
       </section>

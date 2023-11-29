@@ -1,6 +1,6 @@
 import { CryptoCurrency } from "../../lib/types/CryptoCurrency";
-import TableHeader from "./TableHeader";
 import { tableHeaderConfig } from "./tableHeaderConfig";
+import TableHeader from "./TableHeader";
 
 interface CryptoCurrenciesTableProps {
   cryptoCurrencies: CryptoCurrency[],

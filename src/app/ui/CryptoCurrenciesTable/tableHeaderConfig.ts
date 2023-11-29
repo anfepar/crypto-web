@@ -1,7 +1,13 @@
 import { formatCurrency } from "@/app/lib/utils/currency"
 
 export type Transformer = string | number
-interface TableHeaderConfig { id: string, value: string, classes: string, transformer?: (value: Transformer) => Transformer, subItems?: TableHeaderConfig[] }
+interface TableHeaderConfig {
+  id: string,
+  value: string,
+  classes: string,
+  transformer?: (value: Transformer) => Transformer,
+  subItems?: TableHeaderConfig[]
+}
 
 export const tableHeaderConfig: TableHeaderConfig[] = [
   {

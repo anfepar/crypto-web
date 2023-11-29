@@ -1,16 +1,16 @@
 'use client'
 export const dynamic = 'force-dynamic'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import { getCryptoCurrenciesById, useGetCryptocurrenciesByPageQuery } from "./lib/cryptoCurrenciesApi"
 import { CryptoCurrency } from "./lib/types/CryptoCurrency"
 import { getTotalPages } from "./lib/utils/pagination"
+import { appendParamsSearchParams } from './lib/utils/location'
+import CryptoCurrenciesTableSkeleton from './ui/CryptoCurrenciesTable/CryptoCurrenciesTableSkeleton'
 import CryptoCurrenciesTable from "./ui/CryptoCurrenciesTable/CryptoCurrenciesTable"
 import Pagination from "./ui/Pagination/Pagination"
 import SearchBar from "./ui/SearchBar/SearchBar"
-import { appendParamsSearchParams } from './lib/utils/location'
-import { Suspense, useEffect, useState } from 'react'
-import CryptoCurrenciesTableSkeleton from './ui/CryptoCurrenciesTable/CryptoCurrenciesTableSkeleton'
 import SearchBarSkeleton from './ui/SearchBar/SearchBarSkeleton'
 
 export default function Home() {

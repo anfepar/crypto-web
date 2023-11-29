@@ -25,7 +25,7 @@ describe('Search bar tests', () => {
     const filteredList = getAllByRole('listitem')
     expect(filteredList.length).toBe(1)
     const firstFilteredItem = filteredList[0]
-    expect(firstFilteredItem.firstChild?.textContent).toBe('BTC - Bitcoin')
+    expect(firstFilteredItem.firstChild?.textContent).toBe('BTCBitcoin')
   })
   it('should set selected element as input value after click an element', () => {
     const { getByPlaceholderText, getAllByRole } = render(<SearchBar cryptoCurrencies={cryptoCurrenciesMock} currentPage={1} totalPages={1} filterIsActive={false} />)

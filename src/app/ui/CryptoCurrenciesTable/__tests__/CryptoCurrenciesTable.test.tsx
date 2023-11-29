@@ -3,6 +3,8 @@ import { cryptoCurrenciesMock } from '@/app/__mocks__/cryptoCurrencies'
 import { formatCurrency } from '@/app/lib/utils/currency'
 import '@testing-library/jest-dom'
 import CryptoCurrenciesTable from '../CryptoCurrenciesTable'
+import { tableHeaderConfig } from '../tableHeaderConfig'
+import { CryptoCurrency } from '@/app/lib/types/CryptoCurrency'
 
 
 describe('CryptoCurrenciesTable tests', () => {
@@ -12,10 +14,9 @@ describe('CryptoCurrenciesTable tests', () => {
     const tableHeaders = tableRows[0]
     const tableHeadersElements = tableHeaders.getElementsByTagName('th')
     //Validate headers
-    const headers = ['Name', 'Symbol', 'USD Price', 'BTC Price']
-    expect(tableHeadersElements.length).toBe(headers.length)
-    headers.forEach((header, index) => {
-      expect(tableHeadersElements[index].innerHTML).toBe(header)
+    expect(tableHeadersElements.length).toBe(tableHeaderConfig.length)
+    tableHeaderConfig.forEach((header, index) => {
+      expect(tableHeadersElements[index].innerHTML).toBe(header.value)
     })
     //Validate table rows
     const tableBodyRows = tableRows.slice(1)
@@ -23,10 +24,17 @@ describe('CryptoCurrenciesTable tests', () => {
     tableBodyRows.forEach((row, index) => {
       const rowItems = row.getElementsByTagName('td')
       const cryptoCurrency = cryptoCurrenciesMock[index]
-      const formattedPrice = formatCurrency(parseFloat(cryptoCurrency.price_usd))
-      const showedInfo = [cryptoCurrency.name, cryptoCurrency.symbol, formattedPrice, cryptoCurrency.price_btc]
-      showedInfo.forEach((item, index) => {
-        expect(rowItems[index].innerHTML).toBe(item)
+      tableHeaderConfig.forEach((header, index) => {
+        const value = header.transformer ? header.transformer(cryptoCurrency[header.id as keyof CryptoCurrency]) : cryptoCurrency[header.id as keyof CryptoCurrency]
+        if (header.subItems) {
+          expect(rowItems[index].innerHTML.includes(`${value}`)).toBeTruthy()
+          header.subItems.forEach(subItem => {
+            const subItemValue = subItem?.transformer ? subItem?.transformer(cryptoCurrency[subItem.id as keyof CryptoCurrency]) : cryptoCurrency[subItem.id as keyof CryptoCurrency]
+            expect(rowItems[index].innerHTML.includes(`${subItemValue}`)).toBeTruthy()
+          })
+        } else {
+          expect(rowItems[index].innerHTML).toBe(value)
+        }
       })
     })
   })

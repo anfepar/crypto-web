@@ -1,6 +1,7 @@
 import { getTotalPages } from "@/app/lib/utils/pagination";
 import { faAngleLeft, faAngleRight, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
 import { useMemo } from "react";
 
 interface PaginationProps {
@@ -23,6 +24,9 @@ export default function Pagination({ currentPage, totalCoins, onPageClick }: Pag
         </li>
         <li>
           <button
+            className={clsx({
+              'text-slate-400': currentPage === 1
+            })}
             disabled={currentPage === 1}
             onClick={() => currentPage > 1 ? onPageClick(currentPage - 1) : null}
             data-testid="button-prev-page"
@@ -37,8 +41,8 @@ export default function Pagination({ currentPage, totalCoins, onPageClick }: Pag
             </button>
           </li>}
         <li>
-          <span className="cursor-pointer">{currentPage}</span>
-          </li>
+          <span className="font-bold cursor-pointer">{currentPage}</span>
+        </li>
         {currentPage !== totalPages &&
           <li>
             <button onClick={() => currentPage < totalPages ? onPageClick(currentPage + 1) : null}>
@@ -47,6 +51,9 @@ export default function Pagination({ currentPage, totalCoins, onPageClick }: Pag
           </li>}
         <li>
           <button
+            className={clsx({
+              'text-slate-400': currentPage === totalPages
+            })}
             disabled={currentPage === totalPages}
             onClick={() => currentPage < totalPages ? onPageClick(currentPage + 1) : null}
             data-testid="button-next-page"

@@ -3,7 +3,7 @@ import { getCryptoCurrencies } from "@/app/lib/cryptoCurrenciesApi";
 import { CryptoCurrency } from "@/app/lib/types/CryptoCurrency";
 import { appendParamsSearchParams } from "@/app/lib/utils/location";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faCircleXmark, faMagnifyingGlass, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from 'next/navigation'
 
 interface SearchBarProps {
@@ -51,13 +51,17 @@ export default function SearchBar({ cryptoCurrencies, currentPage, totalPages, f
     setFetchingMoreItems(true)
     while (page < totalPages && filteredItems.length === 0) {
       if (page !== (currentPage - 1)) {
-        const newCryptoCurrenciesPage = await getCryptoCurrencies(page * 100)
-        filteredItems = searchValue(newCryptoCurrenciesPage.data, value)
+        try {
+          const newCryptoCurrenciesPage = await getCryptoCurrencies(page * 100)
+          filteredItems = searchValue(newCryptoCurrenciesPage.data, value)
+        } catch (e) {
+          console.error('error fetching crypto currencies', e)
+        }
       }
       page++
     }
-    setFilteredItems(filteredItems)
     setFetchingMoreItems(false)
+    setFilteredItems(filteredItems)
   }
 
   const handleClickItem = (cryptoCurrencyId: string) => {
@@ -109,7 +113,7 @@ export default function SearchBar({ cryptoCurrencies, currentPage, totalPages, f
               </button>
             )}
           </div>
-          {filteredItems.length > 0 && (
+          {filteredItems.length > 0 && !fetchingMoreItems && (
             <ul className="divide-y z-10 absolute bg-slate-200 w-full">
               {filteredItems.map(item => (
                 <li className="cursor-pointer hover:bg-slate-300 rounded" key={item.id}>
@@ -121,9 +125,12 @@ export default function SearchBar({ cryptoCurrencies, currentPage, totalPages, f
             </ul>
           )}
           {fetchingMoreItems && (
-            <p>
-              loading ...
-            </p>
+            <div className="flex items-center bg-slate-200 w-full justify-center gap-x-2.5 p-2 text-slate-600">
+              <FontAwesomeIcon className="animate-spin" icon={faSpinner} />
+              <p>
+                Loading ...
+              </p>
+            </div>
           )}
         </div>
       </div>

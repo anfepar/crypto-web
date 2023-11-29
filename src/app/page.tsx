@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation'
 import { getCryptoCurrenciesById, useGetCryptocurrenciesByPageQuery } from "./lib/cryptoCurrenciesApi"
 import { CryptoCurrency } from "./lib/types/CryptoCurrency"
 import { getTotalPages } from "./lib/utils/pagination"
-import CryptoCurrenciesTable from "./components/CryptoCurrenciesTable/CryptoCurrenciesTable"
-import Pagination from "./components/Pagination/Pagination"
-import SearchBar from "./components/SearchBar/SearchBar"
+import CryptoCurrenciesTable from "./ui/CryptoCurrenciesTable/CryptoCurrenciesTable"
+import Pagination from "./ui/Pagination/Pagination"
+import SearchBar from "./ui/SearchBar/SearchBar"
 import { appendParamsSearchParams } from './lib/utils/location'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
+import CryptoCurrenciesTableSkeleton from './ui/CryptoCurrenciesTable/CryptoCurrenciesTableSkeleton'
+import SearchBarSkeleton from './ui/SearchBar/SearchBarSkeleton'
 
 export default function Home() {
   const searchParams = useSearchParams()
@@ -49,14 +51,29 @@ export default function Home() {
   return (
     <main>
       <section className="container mx-auto max-w-screen-lg">
-        <SearchBar
-          cryptoCurrencies={cryptoCurrencies}
-          currentPage={currentPage}
-          totalPages={getTotalPages(data?.info.coins_num as number)}
-          filterIsActive={filterParam !== null}
-        />
-        <CryptoCurrenciesTable cryptoCurrencies={cryptoCurrencies} />
-        <Pagination totalCoins={data?.info.coins_num as number} currentPage={currentPage} onPageClick={handleChangePage} />
+        {!isLoading && !error &&
+          <>
+            <SearchBar
+              cryptoCurrencies={cryptoCurrencies}
+              currentPage={currentPage}
+              totalPages={getTotalPages(data?.info.coins_num as number)}
+              filterIsActive={filterParam !== null}
+            />
+            <CryptoCurrenciesTable cryptoCurrencies={cryptoCurrencies} />
+            <Pagination totalCoins={data?.info.coins_num as number} currentPage={currentPage} onPageClick={handleChangePage} />
+          </>
+        }
+        {isLoading &&
+          <>
+            <SearchBarSkeleton />
+            <CryptoCurrenciesTableSkeleton />
+          </>
+        }
+        {error &&
+          <p className='text-center text-xl my-8'>
+            An error has occurred. Try again later.
+          </p>
+        }
       </section>
     </main>
   )

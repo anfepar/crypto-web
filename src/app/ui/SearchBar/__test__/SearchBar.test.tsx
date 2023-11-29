@@ -48,7 +48,7 @@ describe('Search bar tests', () => {
     const { getByPlaceholderText, getByText } = render(<SearchBar cryptoCurrencies={cryptoCurrenciesMock} currentPage={1} totalPages={2} filterIsActive={false} />)
     const searchInput = getByPlaceholderText('Search by Symbol / Name')
     fireEvent.change(searchInput, { target: { value: 'TRON' } })
-    const loadingMessage = getByText(/loading/g)
+    const loadingMessage = getByText(/Loading/g)
     expect(loadingMessage).toBeInTheDocument()
     expect(fetchMock.mock.calls.length).toBe(1)
   })

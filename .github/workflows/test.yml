@@ -1,0 +1,12 @@
+name: Launch jest tests
+run-name: Unit testing running 🚀
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm install
+      - run: npm run test:ci

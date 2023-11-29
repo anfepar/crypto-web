@@ -97,12 +97,12 @@ export default function SearchBar({ cryptoCurrencies, currentPage, totalPages, f
 
   return (
     <div>
-      <div className="flex flex-col items-end my-2">
+      <div className="flex flex-col items-center my-2 sm:items-end">
         <div className="w-60 relative">
-          <div className="flex items-center	p-2 bg-slate-200 rounded">
-            <FontAwesomeIcon className="bg-slate-200 text-slate-400 mr-2" icon={faMagnifyingGlass} />
+          <div className="flex items-center	p-2 bg-slate-100 rounded">
+            <FontAwesomeIcon className="bg-slate-100 text-slate-400 mr-2" icon={faMagnifyingGlass} />
             <input
-              className="outline-none w-full bg-slate-200"
+              className="outline-none w-full bg-slate-100 text-sm sm:text-base"
               type="text" onChange={handleInputChange}
               placeholder="Search by Symbol / Name"
               value={inputValue}
@@ -114,18 +114,19 @@ export default function SearchBar({ cryptoCurrencies, currentPage, totalPages, f
             )}
           </div>
           {filteredItems.length > 0 && !fetchingMoreItems && (
-            <ul className="divide-y z-10 absolute bg-slate-200 w-full">
+            <ul className="divide-y z-10 absolute bg-slate-100 w-full">
               {filteredItems.map(item => (
                 <li className="cursor-pointer hover:bg-slate-300 rounded" key={item.id}>
                   <button className="p-2 w-full text-left" role="button" onClick={() => handleClickItem(item.id)}>
-                    {`${item.symbol} - ${item.name}`}
+                    <p className="text-sm sm:text-base">{item.symbol}</p>
+                    <p className="text-xs sm:text-sm">{item.name}</p>
                   </button>
                 </li>
               ))}
             </ul>
           )}
           {fetchingMoreItems && (
-            <div className="flex items-center bg-slate-200 w-full justify-center gap-x-2.5 p-2 text-slate-600">
+            <div className="flex items-center bg-slate-100 w-full justify-center gap-x-2.5 p-2 text-slate-600">
               <FontAwesomeIcon className="animate-spin" icon={faSpinner} />
               <p>
                 Loading ...

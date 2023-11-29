@@ -16,7 +16,7 @@ export default function Pagination({ currentPage, totalCoins, onPageClick }: Pag
   if (totalCoins === 0) return null
   return (
     <div className="flex justify-center my-6">
-      <ul className="grid grid-flow-row grid-cols-7 w-60" >
+      <ul className="grid grid-flow-col grid-cols-6 w-60" >
         <li className="flex justify-center">
           <button data-testid="button-first-page" onClick={() => onPageClick(1)}>
             <FontAwesomeIcon icon={faAnglesLeft} />
@@ -39,7 +39,8 @@ export default function Pagination({ currentPage, totalCoins, onPageClick }: Pag
             <button onClick={() => currentPage > 1 ? onPageClick(currentPage - 1) : null}>
               {currentPage - 1}
             </button>
-          </li>}
+          </li>
+        }
         <li>
           <span className="font-bold cursor-pointer">{currentPage}</span>
         </li>
@@ -48,7 +49,8 @@ export default function Pagination({ currentPage, totalCoins, onPageClick }: Pag
             <button onClick={() => currentPage < totalPages ? onPageClick(currentPage + 1) : null}>
               {currentPage + 1}
             </button>
-          </li>}
+          </li>
+        }
         <li>
           <button
             className={clsx({

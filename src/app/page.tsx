@@ -50,7 +50,7 @@ export default function Page() {
 
   return (
     <main>
-      <section className="container mx-auto max-w-screen-lg">
+      <section className="container mx-auto max-w-screen-md">
         {!isLoading && !error &&
           <>
             <SearchBar

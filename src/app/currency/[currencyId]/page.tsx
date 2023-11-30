@@ -14,7 +14,7 @@ interface PageProps {
 
 const priceValues = [
   { id: 'price_usd', text: 'USD Price' },
-  { id: 'price_btc', text: 'BTC Price' },
+  { id: 'price_btc', text: 'BTC Price', noFormat: true },
   { id: 'market_cap_usd', text: 'Market Cap' }
 ]
 
@@ -42,7 +42,7 @@ export default function Page({ params }: PageProps) {
               {priceValues.map(item => (
                 <React.Fragment key={item.id}>
                   <p className="font-bold text-center">{item.text}</p>
-                  <p className="text-left">{formatCurrency(parseFloat(cryptoCurrency[item.id as keyof CryptoCurrency] as string || '0'))}</p>
+                  <p className="text-left">{item.noFormat ? cryptoCurrency[item.id as keyof CryptoCurrency] || '0' : formatCurrency(parseFloat(cryptoCurrency[item.id as keyof CryptoCurrency] as string || '0'))}</p>
                 </React.Fragment>
               ))}
             </div>

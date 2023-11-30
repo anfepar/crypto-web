@@ -4,6 +4,7 @@ import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import './ui/globals.css'
 import Header from './ui/Header/Header'
+import Footer from './ui/Footer/Footer'
 config.autoAddCss = false
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({
         <ReduxProvider>
           <Header />
           {children}
+          <Footer />
         </ReduxProvider>
       </body>
     </html>

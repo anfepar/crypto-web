@@ -1,11 +1,11 @@
 import { getAllByRole, getByPlaceholderText, getByRole, getByTestId, render, act, getByText } from "@testing-library/react"
 import { cryptoCurrenciesMock } from "../__mocks__/cryptoCurrencies";
-import { useGetCryptocurrenciesByPageQuery } from "../../lib/cryptoCurrenciesApi";
-import { FAKE_ITEMS_QUANTITY } from "../../components/CryptoCurrenciesTable/CryptoCurrenciesTableSkeleton";
+import { useGetCryptocurrenciesByPageQuery } from "@/lib/cryptoCurrenciesApi";
+import { FAKE_ITEMS_QUANTITY } from "../components/CryptoCurrenciesTable/CryptoCurrenciesTableSkeleton";
 import { useSearchParams } from "next/navigation";
-import Home from "..";
+import Home from "../pages";
 
-jest.mock("../../lib/cryptoCurrenciesApi", () => ({
+jest.mock("../lib/cryptoCurrenciesApi", () => ({
   useGetCryptocurrenciesByPageQuery: jest.fn(),
   getCryptoCurrenciesById: jest.fn()
 }))

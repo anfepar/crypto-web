@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { cryptoCurrenciesMock } from '../../../pages/__mocks__/cryptoCurrencies'
+import { cryptoCurrenciesMock } from '../../../__mocks__/cryptoCurrencies'
 import { CryptoCurrency } from '../../../lib/types/CryptoCurrency'
 import CryptoCurrenciesTable from '../CryptoCurrenciesTable'
 import { tableHeaderConfig } from '../tableHeaderConfig'

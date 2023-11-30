@@ -1,4 +1,4 @@
-import { CryptoCurrency } from "../../lib/types/CryptoCurrency"
+import { CryptoCurrency } from "../lib/types/CryptoCurrency"
 
 export const cryptoCurrenciesMock: CryptoCurrency[] = [
   {

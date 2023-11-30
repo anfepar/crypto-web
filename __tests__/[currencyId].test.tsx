@@ -1,10 +1,10 @@
 import { useGetCryptoCurrencyByIdQuery } from "@/lib/cryptoCurrenciesApi"
-import { cryptoCurrenciesMock } from "@/pages/__mocks__/cryptoCurrencies"
+import { cryptoCurrenciesMock } from "@/__mocks__/cryptoCurrencies"
 import { render } from "@testing-library/react"
-import CurrencyPage from "../[currencyId]"
 import { formatCurrency } from "@/lib/utils/currency"
+import CurrencyPage from "../pages/currency/[currencyId]"
 
-jest.mock("../../../lib/cryptoCurrenciesApi", () => ({
+jest.mock("../lib/cryptoCurrenciesApi", () => ({
   useGetCryptoCurrencyByIdQuery: jest.fn()
 }))
 
@@ -13,7 +13,7 @@ const CRYPTO_CURRENCY_ID = '90'
 
 describe('Currency page tests', () => {
   it("should display the correct components when data is fetched", () => {
-    mockUseGetCryptoCurrencyByIdQuery.mockImplementation((id: string) => ({
+    mockUseGetCryptoCurrencyByIdQuery.mockImplementation((id) => ({
       data: cryptoCurrenciesMock.filter(item => item.id === id),
       isLoading: false,
       error: null
@@ -44,7 +44,7 @@ describe('Currency page tests', () => {
   })
 
   it("should display the correct components when redux hook is loading", () => {
-    mockUseGetCryptoCurrencyByIdQuery.mockImplementation((id: string) => ({
+    mockUseGetCryptoCurrencyByIdQuery.mockImplementation((id) => ({
       data: cryptoCurrenciesMock.filter(item => item.id === id),
       isLoading: true,
       error: null
@@ -68,7 +68,7 @@ describe('Currency page tests', () => {
   })
 
   it("should display the correct components on error", () => {
-    mockUseGetCryptoCurrencyByIdQuery.mockImplementation((id: string) => ({
+    mockUseGetCryptoCurrencyByIdQuery.mockImplementation((id) => ({
       data: cryptoCurrenciesMock.filter(item => item.id === id),
       isLoading: false,
       error: { error: 'fake error' }

@@ -3,6 +3,8 @@ import React from "react"
 import { useGetCryptoCurrencyByIdQuery } from "@/app/lib/cryptoCurrenciesApi"
 import { CryptoCurrency } from "@/app/lib/types/CryptoCurrency"
 import { formatCurrency } from "@/app/lib/utils/currency"
+import PageSkeleton from "./ui/PageSkeleton/PageSkeleton"
+import ErrorPage from "@/app/ui/ErrorPage/ErrorPage"
 
 interface PageProps {
   params: {
@@ -29,7 +31,7 @@ export default function Page({ params }: PageProps) {
   return (
     <main>
       <section className="sm:container sm:mx-auto sm:max-w-screen-md m-4">
-        {!isLoading && cryptoCurrency && (
+        {!isLoading && cryptoCurrency && !error && (
           <>
             <div className="grid grid-cols-2 grid-rows-2 gap-1 bg-slate-200 p-4 rounded my-6">
               <p className="row-span-2 rounded-full bg-white w-min h-min py-4 mx-auto px-4 whitespace-nowrap font-bold">{`# ${cryptoCurrency?.rank}`}</p>
@@ -53,6 +55,10 @@ export default function Page({ params }: PageProps) {
               ))}
             </div>
           </>
+        )}
+        {isLoading && <PageSkeleton />}
+        {error && (
+          <ErrorPage />
         )}
       </section>
     </main>

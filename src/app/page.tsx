@@ -1,8 +1,7 @@
 'use client'
 export const dynamic = 'force-dynamic'
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { useRouter } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { getCryptoCurrenciesById, useGetCryptocurrenciesByPageQuery } from "./lib/cryptoCurrenciesApi"
 import { CryptoCurrency } from "./lib/types/CryptoCurrency"
 import { getTotalPages } from "./lib/utils/pagination"
@@ -20,27 +19,31 @@ export default function Page() {
   const router = useRouter()
   const currentPage = pageParam ? parseInt(pageParam) : 1
   const { data, error, isLoading } = useGetCryptocurrenciesByPageQuery(currentPage)
-  const [cryptoCurrencies, setCryptoCurrencies] = useState<CryptoCurrency[]>([])
+  const [cryptoCurrencies, setCryptoCurrencies] = useState<CryptoCurrency[]>(data?.data || [])
 
   useEffect(() => {
     const fetchedCryptoCurrencies = data?.data || []
 
     const getFilteredCryptoCurrency = async (id: string) => {
-      const cryptoCurrency = await getCryptoCurrenciesById(id)
-      setCryptoCurrencies(cryptoCurrency)
+      try {
+        const cryptoCurrency = await getCryptoCurrenciesById(id)
+        setCryptoCurrencies(cryptoCurrency)
+      } catch (e) {
+        console.error('error fetching crypto currency by id', e)
+      }
     }
 
     if (filterParam) {
       const filteredItems = fetchedCryptoCurrencies.filter((cryptoCurrency) => cryptoCurrency.id === filterParam)
       if (filteredItems.length === 0) {
         getFilteredCryptoCurrency(filterParam)
-      } else {
+      } else if (JSON.stringify(filteredItems.map(item => item.id)) !== JSON.stringify(cryptoCurrencies.map(item => item.id))) {
         setCryptoCurrencies(filteredItems)
       }
     } else {
       setCryptoCurrencies(fetchedCryptoCurrencies)
     }
-  }, [data, filterParam])
+  }, [data, filterParam, cryptoCurrencies])
 
 
   const handleChangePage = (newPage: number) => {

@@ -1,7 +1,7 @@
 import TableHeader from "./TableHeader";
 import { tableHeaderConfig } from "./tableHeaderConfig";
 
-const FAKE_ITEMS_QUANTITY = 10;
+export const FAKE_ITEMS_QUANTITY = 10;
 
 export default function CryptoCurrenciesTableSkeleton() {
   const fakeItems = Array.from(Array(FAKE_ITEMS_QUANTITY).keys())

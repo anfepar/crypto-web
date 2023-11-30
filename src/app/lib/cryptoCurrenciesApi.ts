@@ -18,7 +18,7 @@ export const cryptoCurrenciesApi = createApi({
     getCryptocurrenciesByPage: builder.query<CryptoApiResponse, number>({
       query: (page) => `tickers/?start=${(page - 1) * FETCH_ITEMS_LIMIT}&limit=${FETCH_ITEMS_LIMIT}`
     }),
-    getCryptoCurrencyById: builder.query<CryptoCurrency, string>({
+    getCryptoCurrencyById: builder.query<CryptoCurrency[], string>({
       query: (id) => `ticker/?id=${id}`
     })
   })
@@ -42,6 +42,6 @@ export const getCryptoCurrenciesById = async (id: string) => {
   return data;
 }
 
-export const { useGetCryptocurrenciesByPageQuery } = cryptoCurrenciesApi
+export const { useGetCryptocurrenciesByPageQuery, useGetCryptoCurrencyByIdQuery } = cryptoCurrenciesApi
 export const { getCryptocurrenciesByPage } = cryptoCurrenciesApi.endpoints;
 

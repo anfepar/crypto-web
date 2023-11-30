@@ -1,10 +1,9 @@
 import { render } from '@testing-library/react'
 import { cryptoCurrenciesMock } from '@/app/__mocks__/cryptoCurrencies'
-import { formatCurrency } from '@/app/lib/utils/currency'
-import '@testing-library/jest-dom'
+import { CryptoCurrency } from '@/app/lib/types/CryptoCurrency'
 import CryptoCurrenciesTable from '../CryptoCurrenciesTable'
 import { tableHeaderConfig } from '../tableHeaderConfig'
-import { CryptoCurrency } from '@/app/lib/types/CryptoCurrency'
+import '@testing-library/jest-dom'
 
 
 describe('CryptoCurrenciesTable tests', () => {

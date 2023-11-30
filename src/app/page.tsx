@@ -13,7 +13,7 @@ import Pagination from "./ui/Pagination/Pagination"
 import SearchBar from "./ui/SearchBar/SearchBar"
 import SearchBarSkeleton from './ui/SearchBar/SearchBarSkeleton'
 
-export default function Home() {
+export default function Page() {
   const searchParams = useSearchParams()
   const pageParam = searchParams.get('page')
   const filterParam = searchParams.get('filter')

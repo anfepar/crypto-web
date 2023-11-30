@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ReduxProvider } from './providers/ReduxProvider'
+import { ReduxProvider } from './ui/ReduxProvider/ReduxProvider'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import './ui/globals.css'

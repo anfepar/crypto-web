@@ -97,8 +97,8 @@ export default function SearchBar({ cryptoCurrencies, currentPage, totalPages, f
 
   return (
     <div>
-      <div className="flex flex-col items-center my-2 sm:items-end">
-        <div className="w-60 relative">
+      <div className="flex flex-col items-center my-2">
+        <div className="w-60 relative w-full px-2">
           <div className="flex items-center	p-2 bg-slate-100 rounded">
             <FontAwesomeIcon className="bg-slate-100 text-slate-400 mr-2" icon={faMagnifyingGlass} />
             <input

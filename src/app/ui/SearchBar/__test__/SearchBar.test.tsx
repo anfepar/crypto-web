@@ -1,4 +1,4 @@
-import { fireEvent, render } from "@testing-library/react"
+import { act, fireEvent, render } from "@testing-library/react"
 import { cryptoCurrenciesMock } from "@/app/__mocks__/cryptoCurrencies"
 import fetchMock from "jest-fetch-mock"
 import SearchBar from "../SearchBar"
@@ -21,7 +21,9 @@ describe('Search bar tests', () => {
   it('should filtered elements depending input value', () => {
     const { getByPlaceholderText, getAllByRole } = render(<SearchBar cryptoCurrencies={cryptoCurrenciesMock} currentPage={1} totalPages={1} filterIsActive={false} />)
     const searchInput = getByPlaceholderText('Search by Symbol / Name')
-    fireEvent.change(searchInput, { target: { value: 'BTC' } })
+    act(() => {
+      fireEvent.change(searchInput, { target: { value: 'BTC' } })
+    })
     const filteredList = getAllByRole('listitem')
     expect(filteredList.length).toBe(1)
     const firstFilteredItem = filteredList[0]
@@ -30,7 +32,9 @@ describe('Search bar tests', () => {
   it('should set selected element as input value after click an element', () => {
     const { getByPlaceholderText, getAllByRole } = render(<SearchBar cryptoCurrencies={cryptoCurrenciesMock} currentPage={1} totalPages={1} filterIsActive={false} />)
     const searchInput = getByPlaceholderText('Search by Symbol / Name')
-    fireEvent.change(searchInput, { target: { value: 'BTC' } })
+    act(() => {
+      fireEvent.change(searchInput, { target: { value: 'BTC' } })
+    })
     const filteredList = getAllByRole('listitem')
     const filteredItemButton = filteredList[0].firstElementChild
     if (filteredItemButton) {
@@ -47,7 +51,9 @@ describe('Search bar tests', () => {
     fetchMock.mockResponse(JSON.stringify({ data: [] }))
     const { getByPlaceholderText, getByText } = render(<SearchBar cryptoCurrencies={cryptoCurrenciesMock} currentPage={1} totalPages={2} filterIsActive={false} />)
     const searchInput = getByPlaceholderText('Search by Symbol / Name')
-    fireEvent.change(searchInput, { target: { value: 'TRON' } })
+    act(() => {
+      fireEvent.change(searchInput, { target: { value: 'TRON' } })
+    });
     const loadingMessage = getByText(/Loading/g)
     expect(loadingMessage).toBeInTheDocument()
     expect(fetchMock.mock.calls.length).toBe(1)

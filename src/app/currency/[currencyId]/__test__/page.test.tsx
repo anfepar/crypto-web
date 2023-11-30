@@ -39,7 +39,7 @@ describe('Currency page tests', () => {
     expect(getByText(currentCurrency[0].percent_change_7d)).toBeInTheDocument()
 
     expect(getByText(formatCurrency(parseFloat(currentCurrency[0].price_usd)))).toBeInTheDocument()
-    expect(getByText(formatCurrency(parseFloat(currentCurrency[0].price_btc)))).toBeInTheDocument()
+    expect(getByText(currentCurrency[0].price_btc)).toBeInTheDocument()
     expect(getByText(formatCurrency(parseFloat(currentCurrency[0].market_cap_usd)))).toBeInTheDocument()
   })
 

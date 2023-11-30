@@ -1,9 +1,9 @@
 import { getAllByRole, getByPlaceholderText, getByRole, getByTestId, render, act, getByText } from "@testing-library/react"
-import { cryptoCurrenciesMock } from "../__mocks__/cryptoCurrencies";
-import { useGetCryptocurrenciesByPageQuery } from "../lib/cryptoCurrenciesApi";
 import { FAKE_ITEMS_QUANTITY } from "../ui/CryptoCurrenciesTable/CryptoCurrenciesTableSkeleton";
 import { useSearchParams } from "next/navigation";
+import fetchMock from "jest-fetch-mock"
 import Page from "../page"
+import { cryptoCurrenciesMock } from "../__mocks__/cryptoCurrencies";
 
 interface SearchParams { page: number, filter: string | null }
 const searchParamsFilter: SearchParams = {
@@ -26,27 +26,23 @@ jest.mock("next/navigation", () => ({
 }))
 
 jest.mock("../lib/cryptoCurrenciesApi", () => ({
-  useGetCryptocurrenciesByPageQuery: jest.fn(),
-  getCryptoCurrenciesById: jest.fn()
+  getCryptoCurrenciesById: jest.fn(),
+  getCryptoCurrenciesByPage: jest.fn()
 }))
 
+fetchMock.mockResponse(JSON.stringify({ data: cryptoCurrenciesMock }))
+
+
 const mockUseSearchParams = useSearchParams as jest.Mock
-const mockUseGetCryptocurrenciesByPageQuery = useGetCryptocurrenciesByPageQuery as jest.Mock
 
 describe('Home tests', () => {
   it("should display the correct components when data is fetched", () => {
     mockUseSearchParams.mockImplementation(() =>
       ({ get: (key: string) => searchParams[key as keyof SearchParams] })
     )
-    mockUseGetCryptocurrenciesByPageQuery.mockImplementation(() => ({
-      data: ({ data: cryptoCurrenciesMock, info: { coins_num: 300 } }),
-      isLoading: false,
-      error: null
-    }))
-
     let container = null;
-    act(() => {
-      const reactRender = render(<Page />)
+    act(async () => {
+      const reactRender = render(await Page({ searchParams: { page: '1' } }))
       container = reactRender.container
     });
 
@@ -70,65 +66,23 @@ describe('Home tests', () => {
     }
   })
 
-  it("should display the correct components when redux hook is loading", () => {
+
+  it("should filter crypto currency if filter search param is set", () => {
     mockUseSearchParams.mockImplementation(() =>
-      ({ get: (key: string) => searchParams[key as keyof SearchParams] })
+      ({ get: (key: string) => searchParamsFilter[key as keyof SearchParams] })
     )
 
-    mockUseGetCryptocurrenciesByPageQuery.mockImplementation(() => ({
-      data: ({ data: cryptoCurrenciesMock, info: { coins_num: 300 } }),
-      isLoading: true,
-      error: null
-    }))
-
     let container = null;
-    act(() => {
-      const reactRender = render(<Page />)
+    act(async () => {
+      const reactRender = render(await Page({ searchParams: { page: '1', filter: '90' } }))
       container = reactRender.container
     });
     if (container) {
-      expect(getByTestId(container, 'search-bar-skeleton')).toBeInTheDocument()
-      expect(getAllByRole(container, 'row').length).toBe(FAKE_ITEMS_QUANTITY + 1)
-    }
-  })
-
-  it("should show correct components when there are an error in fetch", () => {
-    mockUseSearchParams.mockImplementation(() =>
-      ({ get: (key: string) => searchParams[key as keyof SearchParams] })
-    )
-    mockUseGetCryptocurrenciesByPageQuery.mockImplementation(() => ({
-      data: ({ data: cryptoCurrenciesMock, info: { coins_num: 300 } }),
-      isLoading: false,
-      error: { error: 'fake error' }
-    }))
-    let container = null;
-    act(() => {
-      const reactRender = render(<Page />)
-      container = reactRender.container
-    });
-    if (container) {
-      expect(getByText(container, 'An error has occurred. Try again later.')).toBeInTheDocument()
+      const tableRows = getAllByRole(container, 'row')
+      expect(tableRows.length).toBe(2)
     }
   })
 })
 
-it("should filter crypto currency if filter search param is set", () => {
-  mockUseSearchParams.mockImplementation(() =>
-    ({ get: (key: string) => searchParamsFilter[key as keyof SearchParams] })
-  )
-  mockUseGetCryptocurrenciesByPageQuery.mockImplementation(() => ({
-    data: ({ data: cryptoCurrenciesMock, info: { coins_num: 300 } }),
-    isLoading: false,
-    error: null
-  }))
 
-  let container = null;
-  act(() => {
-    const reactRender = render(<Page />)
-    container = reactRender.container
-  });
-  if (container) {
-    const tableRows = getAllByRole(container, 'row')
-    expect(tableRows.length).toBe(2)
-  }
-})
+

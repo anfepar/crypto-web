@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { ReduxProvider } from './ui/ReduxProvider/ReduxProvider'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import './ui/globals.css'
@@ -20,11 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ReduxProvider>
-          <Header />
+        <Header />
+        <main>
           {children}
-          <Footer />
-        </ReduxProvider>
+        </main>
+        <Footer />
       </body>
     </html>
   )

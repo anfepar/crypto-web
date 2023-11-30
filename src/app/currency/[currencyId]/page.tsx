@@ -31,7 +31,7 @@ export default function Page({ params }: PageProps) {
   return (
     <main>
       <section className="sm:container sm:mx-auto sm:max-w-screen-md m-4">
-        {!isLoading && cryptoCurrency && !error && (
+        {!isLoading && !error && cryptoCurrency && (
           <>
             <div className="grid grid-cols-2 grid-rows-2 gap-1 bg-slate-200 p-4 rounded my-6">
               <p className="row-span-2 rounded-full bg-white w-min h-min py-4 mx-auto px-4 whitespace-nowrap font-bold">{`# ${cryptoCurrency?.rank}`}</p>

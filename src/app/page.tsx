@@ -11,6 +11,7 @@ import CryptoCurrenciesTable from "./ui/CryptoCurrenciesTable/CryptoCurrenciesTa
 import Pagination from "./ui/Pagination/Pagination"
 import SearchBar from "./ui/SearchBar/SearchBar"
 import SearchBarSkeleton from './ui/SearchBar/SearchBarSkeleton'
+import ErrorPage from './ui/ErrorPage/ErrorPage'
 
 export default function Page() {
   const searchParams = useSearchParams()
@@ -73,9 +74,7 @@ export default function Page() {
           </>
         }
         {error &&
-          <p className='text-center text-xl my-8'>
-            An error has occurred. Try again later.
-          </p>
+          <ErrorPage />
         }
       </section>
     </main>

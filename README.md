@@ -58,6 +58,7 @@ There are three options that I analyzed to make the best decision for this proje
    Finally, I decided to use Next.js SSR without Redux configuration because I believe it is the best option in terms of balancing performance and complexity.
    ## Performance test
   <img width="840" alt="Screenshot 2023-11-30 at 10 36 27 PM" src="https://github.com/anfepar/crypto-web/assets/22940371/4d788392-3744-4d86-bbcc-d2afdc1f1998">
+  
 <a name="future-work"></a>
 ## Future work
 - [ ] Realtime update of crypto currency data

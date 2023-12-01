@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { CRYPTO_URL } from './constants/strings'
 import { FETCH_ITEMS_LIMIT } from './constants/numbers'
 import { CryptoCurrency } from './types/CryptoCurrency'
+import { HYDRATE } from 'next-redux-wrapper'
 
 interface CryptoApiResponse {
   data: CryptoCurrency[],
@@ -14,6 +15,11 @@ interface CryptoApiResponse {
 export const cryptoCurrenciesApi = createApi({
   reducerPath: 'cryptocurrenciesApi',
   baseQuery: fetchBaseQuery({ baseUrl: CRYPTO_URL }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath]
+    }
+  },
   endpoints: (builder) => ({
     getCryptocurrenciesByPage: builder.query<CryptoApiResponse, number>({
       query: (page) => `tickers/?start=${(page - 1) * FETCH_ITEMS_LIMIT}&limit=${FETCH_ITEMS_LIMIT}`

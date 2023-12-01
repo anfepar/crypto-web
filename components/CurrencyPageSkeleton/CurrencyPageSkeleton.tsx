@@ -1,7 +1,4 @@
 import React from "react"
-import { CryptoCurrency } from "@/app/lib/types/CryptoCurrency"
-import { formatCurrency } from "@/app/lib/utils/currency"
-
 const priceValues = [
   { id: 'price_usd', text: 'USD Price' },
   { id: 'price_btc', text: 'BTC Price' },
@@ -14,7 +11,7 @@ const percentageValues = [
   { id: 'percent_change_7d', text: '7d %' }
 ]
 
-export default function PageSkeleton() {
+export default function CurrencyPageSkeleton() {
   return (
     <>
       <div className="animate-pulse grid grid-cols-2 grid-rows-2 gap-1 bg-slate-200 p-4 rounded my-6">

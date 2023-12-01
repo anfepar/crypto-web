@@ -1,16 +1,10 @@
-'use client'
 import React from "react"
-import { useGetCryptoCurrencyByIdQuery } from "@/app/lib/cryptoCurrenciesApi"
-import { CryptoCurrency } from "@/app/lib/types/CryptoCurrency"
-import { formatCurrency } from "@/app/lib/utils/currency"
-import PageSkeleton from "./ui/PageSkeleton/PageSkeleton"
-import ErrorPage from "@/app/ui/ErrorPage/ErrorPage"
-
-interface PageProps {
-  params: {
-    currencyId: string
-  }
-}
+import { cryptoCurrenciesApi, useGetCryptoCurrencyByIdQuery } from "@/lib/cryptoCurrenciesApi"
+import { CryptoCurrency } from "@/lib/types/CryptoCurrency"
+import { formatCurrency } from "@/lib/utils/currency"
+import ErrorPage from "@/components/ErrorPage/ErrorPage"
+import CurrencyPageSkeleton from "@/components/CurrencyPageSkeleton/CurrencyPageSkeleton"
+import { wrapper } from "@/lib/store"
 
 const priceValues = [
   { id: 'price_usd', text: 'USD Price' },
@@ -24,9 +18,27 @@ const percentageValues = [
   { id: 'percent_change_7d', text: '7d %' }
 ]
 
-export default function Page({ params }: PageProps) {
-  const { currencyId } = params
-  const { data, error, isLoading } = useGetCryptoCurrencyByIdQuery(currencyId)
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) => async (context) => {
+    const currencyId = context.params?.currencyId
+    if (currencyId) {
+      store.dispatch(cryptoCurrenciesApi.endpoints.getCryptoCurrencyById.initiate(currencyId as string))
+    }
+
+    await Promise.all(store.dispatch(cryptoCurrenciesApi.util.getRunningQueriesThunk()));
+
+    return {
+      props: { currencyId },
+    };
+  }
+);
+
+interface CurrencyPageProps {
+  currencyId: string
+}
+
+export default function CurrencyPage({ currencyId }: CurrencyPageProps) {
+  const { data, error, isLoading } = useGetCryptoCurrencyByIdQuery(currencyId as string)
   const cryptoCurrency = data && data.length > 0 ? data[0] : null
   return (
     <main>
@@ -56,7 +68,7 @@ export default function Page({ params }: PageProps) {
             </div>
           </>
         )}
-        {isLoading && <PageSkeleton />}
+        {isLoading && <CurrencyPageSkeleton />}
         {error && (
           <ErrorPage />
         )}

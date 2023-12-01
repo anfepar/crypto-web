@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { getTotalPages } from "@/app/lib/utils/pagination";
+import { getTotalPages } from "../../lib/utils/pagination";
 import { faAngleLeft, faAngleRight, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";

@@ -1,5 +1,5 @@
 import { act, fireEvent, render } from "@testing-library/react"
-import { cryptoCurrenciesMock } from "@/app/__mocks__/cryptoCurrencies"
+import { cryptoCurrenciesMock } from "../../../__mocks__/cryptoCurrencies"
 import fetchMock from "jest-fetch-mock"
 import SearchBar from "../SearchBar"
 

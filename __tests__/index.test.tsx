@@ -1,43 +1,25 @@
 import { getAllByRole, getByPlaceholderText, getByRole, getByTestId, render, act, getByText } from "@testing-library/react"
 import { cryptoCurrenciesMock } from "../__mocks__/cryptoCurrencies";
-import { useGetCryptocurrenciesByPageQuery } from "../lib/cryptoCurrenciesApi";
-import { FAKE_ITEMS_QUANTITY } from "../ui/CryptoCurrenciesTable/CryptoCurrenciesTableSkeleton";
+import { useGetCryptocurrenciesByPageQuery } from "@/lib/cryptoCurrenciesApi";
+import { FAKE_ITEMS_QUANTITY } from "../components/CryptoCurrenciesTable/CryptoCurrenciesTableSkeleton";
 import { useSearchParams } from "next/navigation";
-import Page from "../page"
-
-interface SearchParams { page: number, filter: string | null }
-const searchParamsFilter: SearchParams = {
-  page: 1,
-  filter: '90'
-}
-
-const searchParams: SearchParams = {
-  page: 1,
-  filter: null
-}
-
-jest.mock("next/navigation", () => ({
-  useSearchParams: jest.fn(),
-  useRouter() {
-    return {
-      push: () => { }
-    }
-  }
-}))
+import Home from "../pages";
 
 jest.mock("../lib/cryptoCurrenciesApi", () => ({
   useGetCryptocurrenciesByPageQuery: jest.fn(),
   getCryptoCurrenciesById: jest.fn()
 }))
 
-const mockUseSearchParams = useSearchParams as jest.Mock
+jest.mock("next/navigation", () => ({
+  useRouter: () => {
+    push: jest.fn()
+  }
+}))
+
 const mockUseGetCryptocurrenciesByPageQuery = useGetCryptocurrenciesByPageQuery as jest.Mock
 
 describe('Home tests', () => {
   it("should display the correct components when data is fetched", () => {
-    mockUseSearchParams.mockImplementation(() =>
-      ({ get: (key: string) => searchParams[key as keyof SearchParams] })
-    )
     mockUseGetCryptocurrenciesByPageQuery.mockImplementation(() => ({
       data: ({ data: cryptoCurrenciesMock, info: { coins_num: 300 } }),
       isLoading: false,
@@ -46,7 +28,7 @@ describe('Home tests', () => {
 
     let container = null;
     act(() => {
-      const reactRender = render(<Page />)
+      const reactRender = render(<Home currentPage={1} filterParam={''} />)
       container = reactRender.container
     });
 
@@ -71,10 +53,6 @@ describe('Home tests', () => {
   })
 
   it("should display the correct components when redux hook is loading", () => {
-    mockUseSearchParams.mockImplementation(() =>
-      ({ get: (key: string) => searchParams[key as keyof SearchParams] })
-    )
-
     mockUseGetCryptocurrenciesByPageQuery.mockImplementation(() => ({
       data: ({ data: cryptoCurrenciesMock, info: { coins_num: 300 } }),
       isLoading: true,
@@ -83,7 +61,7 @@ describe('Home tests', () => {
 
     let container = null;
     act(() => {
-      const reactRender = render(<Page />)
+      const reactRender = render(<Home currentPage={1} filterParam={''} />)
       container = reactRender.container
     });
     if (container) {
@@ -93,9 +71,6 @@ describe('Home tests', () => {
   })
 
   it("should show correct components when there are an error in fetch", () => {
-    mockUseSearchParams.mockImplementation(() =>
-      ({ get: (key: string) => searchParams[key as keyof SearchParams] })
-    )
     mockUseGetCryptocurrenciesByPageQuery.mockImplementation(() => ({
       data: ({ data: cryptoCurrenciesMock, info: { coins_num: 300 } }),
       isLoading: false,
@@ -103,7 +78,7 @@ describe('Home tests', () => {
     }))
     let container = null;
     act(() => {
-      const reactRender = render(<Page />)
+      const reactRender = render(<Home currentPage={1} filterParam={''} />)
       container = reactRender.container
     });
     if (container) {
@@ -113,9 +88,6 @@ describe('Home tests', () => {
 })
 
 it("should filter crypto currency if filter search param is set", () => {
-  mockUseSearchParams.mockImplementation(() =>
-    ({ get: (key: string) => searchParamsFilter[key as keyof SearchParams] })
-  )
   mockUseGetCryptocurrenciesByPageQuery.mockImplementation(() => ({
     data: ({ data: cryptoCurrenciesMock, info: { coins_num: 300 } }),
     isLoading: false,
@@ -124,7 +96,7 @@ it("should filter crypto currency if filter search param is set", () => {
 
   let container = null;
   act(() => {
-    const reactRender = render(<Page />)
+    const reactRender = render(<Home currentPage={1} filterParam={'90'} />)
     container = reactRender.container
   });
   if (container) {

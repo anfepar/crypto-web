@@ -1,4 +1,4 @@
-import { formatCurrency } from "@/app/lib/utils/currency"
+import { formatCurrency } from "../../lib/utils/currency"
 
 export type Transformer = string | number
 interface TableHeaderConfig {

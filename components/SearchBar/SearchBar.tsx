@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { getCryptoCurrencies } from "@/app/lib/cryptoCurrenciesApi";
-import { CryptoCurrency } from "@/app/lib/types/CryptoCurrency";
-import { appendParamsSearchParams } from "@/app/lib/utils/location";
+import { getCryptoCurrencies } from "../../lib/cryptoCurrenciesApi";
+import { CryptoCurrency } from "../../lib/types/CryptoCurrency";
+import { appendParamsSearchParams } from "../../lib/utils/location";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark, faMagnifyingGlass, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from 'next/navigation'

@@ -6,7 +6,7 @@ import Link from "next/link";
 
 
 export default function Header() {
-  const pathname = usePathname()
+  const pathname = usePathname();
   return (
     <header className="grid grid-cols-3 container mx-auto  max-w-screen-md my-8 text-blue-400">
       {pathname !== '/' && (
@@ -15,7 +15,7 @@ export default function Header() {
         </Link>
       )}
       <Link href="/" className="col-start-2	col-end-2	flex justify-center items-center text-base sm:text-xl">
-        <FontAwesomeIcon  data-testid="coins-button" icon={faCoins} />
+        <FontAwesomeIcon data-testid="coins-button" icon={faCoins} />
         <p className="ml-2 whitespace-nowrap	">Crypto Currencies</p>
       </Link>
 

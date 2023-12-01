@@ -1,5 +1,6 @@
+'use client'
 import { useCallback, useEffect, useState } from "react";
-import { getCryptoCurrencies } from "@/app/lib/cryptoCurrenciesApi";
+import { getCryptoCurrenciesByPage } from "@/app/lib/cryptoCurrenciesApi";
 import { CryptoCurrency } from "@/app/lib/types/CryptoCurrency";
 import { appendParamsSearchParams } from "@/app/lib/utils/location";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -52,7 +53,7 @@ export default function SearchBar({ cryptoCurrencies, currentPage, totalPages, f
     while (page < totalPages && filteredItems.length === 0) {
       if (page !== (currentPage - 1)) {
         try {
-          const newCryptoCurrenciesPage = await getCryptoCurrencies(page * 100)
+          const newCryptoCurrenciesPage = await getCryptoCurrenciesByPage(page)
           filteredItems = searchValue(newCryptoCurrenciesPage.data, value)
         } catch (e) {
           console.error('error fetching crypto currencies', e)

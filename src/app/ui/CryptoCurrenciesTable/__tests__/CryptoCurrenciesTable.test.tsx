@@ -3,11 +3,13 @@ import { cryptoCurrenciesMock } from '@/app/__mocks__/cryptoCurrencies'
 import { CryptoCurrency } from '@/app/lib/types/CryptoCurrency'
 import CryptoCurrenciesTable from '../CryptoCurrenciesTable'
 import { tableHeaderConfig } from '../tableHeaderConfig'
+import fetchMock from "jest-fetch-mock"
 import '@testing-library/jest-dom'
 
 
 describe('CryptoCurrenciesTable tests', () => {
   it('should show the cryptocurrencies list', () => {
+    fetchMock.mockResponse(JSON.stringify({ data: cryptoCurrenciesMock[0] }))
     const { getAllByRole } = render(<CryptoCurrenciesTable cryptoCurrencies={cryptoCurrenciesMock} />)
     const tableRows: HTMLElement[] = getAllByRole('row')
     const tableHeaders = tableRows[0]
@@ -39,8 +41,15 @@ describe('CryptoCurrenciesTable tests', () => {
   })
 
   it('should show empty state', () => {
-    const { getByText } = render(<CryptoCurrenciesTable cryptoCurrencies={[]} />)
-    const emptyParagraph: HTMLElement = getByText('No data to show')
-    expect(emptyParagraph).toBeInTheDocument()
+    fetchMock.mockResponse(JSON.stringify({ data: cryptoCurrenciesMock[0] }))
+    const { getAllByRole } = render(<CryptoCurrenciesTable cryptoCurrencies={[]} />)
+    const tableRows: HTMLElement[] = getAllByRole('row')
+    const tableHeaders = tableRows[0]
+    const tableHeadersElements = tableHeaders.getElementsByTagName('th')
+    //Validate headers
+    expect(tableHeadersElements.length).toBe(tableHeaderConfig.length)
+    //Validate table rows
+    const tableBodyRows = tableRows.slice(1)
+    expect(tableBodyRows.length).toBe(0)
   })
 })

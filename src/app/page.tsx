@@ -1,82 +1,49 @@
-'use client'
-export const dynamic = 'force-dynamic'
-import { useEffect, useState } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
-import { getCryptoCurrenciesById, useGetCryptocurrenciesByPageQuery } from "./lib/cryptoCurrenciesApi"
+import { getCryptoCurrenciesByPage, getCryptoCurrenciesById } from "./lib/cryptoCurrenciesApi"
 import { CryptoCurrency } from "./lib/types/CryptoCurrency"
 import { getTotalPages } from "./lib/utils/pagination"
-import { appendParamsSearchParams } from './lib/utils/location'
-import CryptoCurrenciesTableSkeleton from './ui/CryptoCurrenciesTable/CryptoCurrenciesTableSkeleton'
 import CryptoCurrenciesTable from "./ui/CryptoCurrenciesTable/CryptoCurrenciesTable"
 import Pagination from "./ui/Pagination/Pagination"
 import SearchBar from "./ui/SearchBar/SearchBar"
-import SearchBarSkeleton from './ui/SearchBar/SearchBarSkeleton'
-import ErrorPage from './ui/ErrorPage/ErrorPage'
 
-export default function Page() {
-  const searchParams = useSearchParams()
-  const pageParam = searchParams.get('page')
-  const filterParam = searchParams.get('filter')
-  const router = useRouter()
-  const currentPage = pageParam ? parseInt(pageParam) : 1
-  const { data, error, isLoading } = useGetCryptocurrenciesByPageQuery(currentPage)
-  const [cryptoCurrencies, setCryptoCurrencies] = useState<CryptoCurrency[]>(data?.data || [])
+interface PageProps {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
 
-  useEffect(() => {
-    const fetchedCryptoCurrencies = data?.data || []
+export default async function Page({ searchParams }: PageProps) {
+  const pageParam = searchParams.page
+  const filterParam = searchParams.filter || null
+  const currentPage = pageParam ? parseInt(pageParam as string) : 1
+  const data = await getCryptoCurrenciesByPage(currentPage)
+  let cryptoCurrencies = data?.data || []
 
-    const getFilteredCryptoCurrency = async (id: string) => {
-      try {
-        const cryptoCurrency = await getCryptoCurrenciesById(id)
-        setCryptoCurrencies(cryptoCurrency)
-      } catch (e) {
-        console.error('error fetching crypto currency by id', e)
-      }
+  const getFilteredCryptoCurrency = async (id: string) => {
+    try {
+      const cryptoCurrency = await getCryptoCurrenciesById(id)
+      cryptoCurrencies = cryptoCurrency
+    } catch (e) {
+      console.error('error fetching crypto currency by id', e)
     }
+  }
 
-    if (filterParam) {
-      const filteredItems = fetchedCryptoCurrencies.filter((cryptoCurrency) => cryptoCurrency.id === filterParam)
-      if (filteredItems.length === 0) {
-        getFilteredCryptoCurrency(filterParam)
-      } else if (JSON.stringify(filteredItems.map(item => item.id)) !== JSON.stringify(cryptoCurrencies.map(item => item.id))) {
-        setCryptoCurrencies(filteredItems)
-      }
-    } else {
-      setCryptoCurrencies(fetchedCryptoCurrencies)
+  if (filterParam) {
+    const filteredItems = cryptoCurrencies.filter((cryptoCurrency: CryptoCurrency) => cryptoCurrency.id === filterParam)
+    if (filteredItems.length === 0) {
+      getFilteredCryptoCurrency(filterParam as string)
+    } else if (JSON.stringify(filteredItems.map((item: CryptoCurrency) => item.id)) !== JSON.stringify(cryptoCurrencies.map((item: CryptoCurrency) => item.id))) {
+      cryptoCurrencies = filteredItems
     }
-  }, [data, filterParam, cryptoCurrencies])
-
-
-  const handleChangePage = (newPage: number) => {
-    const redirectUrl = appendParamsSearchParams(location.search, { page: newPage.toString() })
-    router.push(`/?${redirectUrl}`)
   }
 
   return (
-    <main>
-      <section className="container mx-auto max-w-screen-md">
-        {!isLoading && !error &&
-          <>
-            <SearchBar
-              cryptoCurrencies={cryptoCurrencies}
-              currentPage={currentPage}
-              totalPages={getTotalPages(data?.info.coins_num as number)}
-              filterIsActive={filterParam !== null}
-            />
-            <CryptoCurrenciesTable cryptoCurrencies={cryptoCurrencies} />
-            <Pagination totalCoins={data?.info.coins_num as number} currentPage={currentPage} onPageClick={handleChangePage} />
-          </>
-        }
-        {isLoading &&
-          <>
-            <SearchBarSkeleton />
-            <CryptoCurrenciesTableSkeleton />
-          </>
-        }
-        {error &&
-          <ErrorPage />
-        }
-      </section>
-    </main>
+    <section className="container mx-auto max-w-screen-md">
+      <SearchBar
+        cryptoCurrencies={cryptoCurrencies}
+        currentPage={currentPage}
+        totalPages={getTotalPages(data?.info.coins_num as number)}
+        filterIsActive={filterParam !== null}
+      />
+      <CryptoCurrenciesTable cryptoCurrencies={cryptoCurrencies} />
+      <Pagination totalCoins={data?.info.coins_num as number} currentPage={currentPage} />
+    </section>
   )
 }

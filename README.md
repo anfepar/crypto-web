@@ -1,5 +1,5 @@
 # Crypto Currencies Web
-
+## [App URL](https://crypto-web-five-nu.vercel.app/)
 ## Introduction
 
 This project is a **Next.js** application that displays a list of cryptocurrencies, their exchange rates to USD, and the price in BTC. It also includes a detailed page for each cryptocurrency. The development process, architecture, and tech stack are explained in detail throughout this documentation.
